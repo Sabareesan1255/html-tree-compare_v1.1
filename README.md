@@ -22,6 +22,7 @@
 
 - 1st step is to install the dependencies required for python, the dependencies are available in the `/assets/requirements.txt` in the project folder
 - install the dependencies using the command via terminal/cmd `pip install -r <path_to_requirements.txt>`
+- unzip the following file 'assets/codemirror.zip' into the same path
 - navigate to the project directory and open up a terminal/cmd and run the following command to install node dependencies, `npm i`
 - once the above are installed, run the following command to open the project. `npm start`
 
