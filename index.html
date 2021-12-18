@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document Compare</title>
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css" /> -->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.1/jquery.min.js"></script> -->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script> -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+    <!-- CSS only -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous" />
+
+    <!-- JavaScript Bundle with Popper -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF" crossorigin="anonymous"></script>
+
+    <!-- <link href="//cdn.jsdelivr.net/npm/jquery.fancytree@2.27/dist/skin-win8/ui.fancytree.min.css" rel="stylesheet" /> -->
+    <!-- <script src="//cdn.jsdelivr.net/npm/jquery.fancytree@2.27/dist/jquery.fancytree-all-deps.min.js"></script> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/zTree.v3/3.5.42/css/zTreeStyle/zTreeStyle.min.css" integrity="sha512-W3T+ffBp2PURTmeY0dPZuakhOCElWnf2IJsDJnD/wUXkqrDedFvxxuDURSKU2KpDRym04aB3B9Esl+ti1lTBcg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/zTree.v3/3.5.42/js/jquery.ztree.all.min.js" integrity="sha512-7sGF7QJRDdvZna4GfwsdoY6a8jxCFZTAlL2OFKjmEXZ9mPwzHbKnwDiIy9RI1hYZv+XLtbOew+6slAJahxaH+Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/zTree.v3/3.5.42/js/jquery.ztree.exhide.min.js" integrity="sha512-14PI9JWmHgL82sUHfY/KMNwNj5DG8aOOyoCKPUpyDGQKC/XzVR8BcFlaLeO4Hb2u4lsK95koUFFy8hgrtmMeow==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsonpath@1.1.1/jsonpath.min.js"></script>
+    <script src="https://unpkg.com/string-similarity@4.0.1/umd/string-similarity.min.js"></script>
+
+    <link rel="stylesheet" href="./assets/codemirror/doc/docs.css" />
+
+    <link rel="stylesheet" href="./assets/codemirror/lib/codemirror.css" />
+    <link rel="stylesheet" href="./assets/codemirror/addon/merge/merge.css" />
+    <script src="./assets/codemirror/lib/codemirror.js"></script>
+    <script src="./assets/codemirror/lib/compare.js"></script>
+    <script src="./assets/codemirror/mode/xml/xml.js"></script>
+    <script src="./assets/codemirror/mode/css/css.js"></script>
+    <script src="./assets/codemirror/mode/javascript/javascript.js"></script>
+    <script src="./assets/codemirror/mode/htmlmixed/htmlmixed.js"></script>
+    <script src="./assets/diff_match_patch.js"></script>
+    <script src="./assets/codemirror/addon/merge/merge.js"></script>
+
+  </head>
+  <style>
+  body
+  {
+	margin: 2em;
+	background-color: 
+  }
+    #html1 {
+      border: 2px dotted black;
+    }
+    .range-sld {
+      display: flex;
+      flex-direction: column;
+    }
+    #rangePrimary {
+      align-self: center;
+    }
+    .CodeMirror {
+      line-height: 1.2;
+	  
+    }
+    @media screen and (min-width: 1300px) {
+      article {
+        max-width: 1000px;
+      }
+      #nav {
+        border-right: 499px solid transparent;
+      }
+    }
+    #view {
+      width: 100%;
+    }
+    #perc {
+      /* font-weight: bold; */
+    }
+    span.clicky {
+      cursor: pointer;
+      background: #d70;
+      color: white;
+      padding: 0 3px;
+      border-radius: 3px;
+    }
+    .errorAdd {
+      color: red;
+    }
+    .errorAddHighLight {
+      background-color: cornsilk;
+    }
+	.ztree
+	{
+		margin: 2em;
+		background-color: #F3FBF1;
+		
+	}
+	h4
+	{
+		margin-top: 2em;
+		color: #24B405;
+	}
+	.label
+	{
+		margin-top: 2em;
+		margin-bottom: 1em;
+	}
+	.loader {
+	margin-top: 16px;
+  border: 5px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 5px solid #3498db;
+  width: 70px;
+  height: 70px;
+  -webkit-animation: spin 2s linear infinite; /* Safari */
+  animation: spin 2s linear infinite;
+  align: center;
+}
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+  </style>
+  <body>
+    <!-- <div id="html1">
+      <ul>
+        <li>
+          template
+          <ul>
+            <li>h1</li>
+            <li>div
+              <ul>
+                <li>
+                  header
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+        <li>Root node 2</li>
+      </ul>
+    </div> -->
+    <!-- <div id="tree"></div> -->
+    
+    <div class="mt-5">
+	<div class="label">
+	<label>Select python version present on Win/Mac system</label>
+      <select id="pySelect" class="form-select" aria-label="Default select example">
+        <option value="python">python</option>
+        <option value="python3">python3</option>
+      </select>
+	 </div>
+      <div class="text-left">
+        <button id="loadnewwindow" class="btn btn-primary">Compare</button>
+			<div class="text-center loader"></div>
+      </div>
+      <div class="text-left mb-5 label" id="perc">
+        <p>
+          Similarity score between File A & File B: <strong><span style="color:red;">20</span>%</strong>
+        </p>
+      </div>
+
+      <div class="row">
+        <div class="column col-6">
+          <h4>Input File A</h4>
+          <textarea id="inputcode1" cols="30" rows="10">Paste HTML/XML document content</textarea>
+        <div class="treecompare">
+          <h4>File A Tree Structure</h4>
+          <div class="form-group range-sld">
+            <h5><label for="formControlRange">Levels: </label> <span style="color:red;" id="rangePrimary">2</span></h5>
+            <input type="range" class="form-control-range" id="formControlRange" min="0" max="2" value="2" />            
+          </div>
+          <ul id="treeDemo" class="ztree"></ul>
+		  </div>
+		  </div>
+
+        <div class="column col-6">
+          <h4>Input File B</h4>
+          <textarea id="inputcode2" cols="30" rows="10">Paste HTML/XML document content</textarea>
+
+        <div class="treecompare">
+		<h4>File B Tree Structure</h4>
+          <div class="form-group range-sld">
+            <h5><label for="formControlRange1">Levels: </label> <span style="color:red;" id="rangePrimary1">2</span></h5>
+            <input type="range" class="form-control-range" id="formControlRange1" min="0" max="2" value="2" />            
+          </div>
+          <ul id="treeDemo1" class="ztree"></ul>
+		</div>
+		</div>
+
+        <div class="doccompare">
+          <h4>Document Comparison: File A and File B</h4>
+          <div id="view" class="mt-md-5"></div>
+        </div>
+        
+      </div>
+    </div>
+  </body>
+  <!-- <script type="text/javascript" src="./assets/dataA.js"></script> -->
+  <!-- <script type="text/javascript" src="./assets/dataB.js"></script> -->
+
+  <!-- Insert this line above script imports  -->
+  <script>
+    if (typeof module === "object") {
+      window.module = module;
+      module = undefined;
+    }
+  </script>
+  <!-- normal script imports etc  -->
+
+  <!-- Insert this line after script imports -->
+  <script>
+    if (window.module) module = window.module;
+  </script>
+
+  <!-- You can also require other files to run in this process -->
+  <script src="./renderer.js"></script>
+
+  <script>
+    var zTreeObjA, zTreeObjB;
+
+    var filterFileALevel = 0;
+    var filterFileBLevel = 0;
+
+    var setting = {
+      view: {
+        showIcon: false,
+      },
+    };
+
+    var value,
+      orig1,
+      orig2,
+      dv,
+      panes = 2,
+      highlight = true,
+      connect = "align",
+      collapse = false;
+	  
+	  function parseXml(xml) {
+   var dom = null;
+   if (window.DOMParser) {
+      try { 
+         dom = (new DOMParser()).parseFromString(xml, "text/xml"); 
+      } 
+      catch (e) { dom = null; }
+   }
+   else if (window.ActiveXObject) {
+      try {
+         dom = new ActiveXObject('Microsoft.XMLDOM');
+         dom.async = false;
+         if (!dom.loadXML(xml)) // parse error ..
+            window.alert(dom.parseError.reason + dom.parseError.srcText);
+      } 
+      catch (e) { dom = null; }
+   }
+   else
+      alert("oops");
+   return dom;
+}
+
+    function initUI() {
+
+      if (value == null) return;
+      var target = document.getElementById("view");
+      target.innerHTML = "";
+      dv = CodeMirror.MergeView(target, {
+        value: value,
+        origLeft: panes == 3 ? orig1 : null,
+        orig: orig2,
+        lineNumbers: true,
+        mode: "text/html",
+        highlightDifferences: highlight,
+        connect: connect,
+        collapseIdentical: collapse,
+      });
+
+    }
+    const btnclick = document.getElementById("loadnewwindow");
+
+    btnclick.addEventListener("click", function () {
+		      
+		//$(".loader").show();
+
+      console.log("click btn");
+
+      let input1Data = $("#inputcode1").val();
+      let input2Data = $("#inputcode2").val();
+
+      if (input1Data !== "" && input2Data !== "") {
+        // let testData = "<div>aa<h1>a</h1></div>";
+
+        let output = window.api.saveAndProcessJson(input1Data, input2Data, $("#pySelect").val());
+
+        // console.log(output);
+
+        initVtree(output[0], output[1]);
+
+
+        initCodeMr();
+
+        // calculate percentage
+
+        let percentageSim = 100 - ($(".errorAdd").length / zTreeObjA.transformToArray(zTreeObjA.getNodes()).length) * 100;
+
+        // console.log(percentageSim);
+        // console.log(Math.sign(percentageSim) >= 0);
+
+        if (Math.sign(percentageSim) < 0) {
+          percentageSim = 0;
+        }
+
+        $("#perc span").html(percentageSim.toFixed(2));
+		//$(".loader").hide();
+
+        $("#perc").show();
+        $(".treecompare").show();
+        $(".doccompare").show();
+		
+      } else {
+        alert("Contents are empty for File A and B");
+      }
+    });
+
+    function initCodeMr() {
+      $("#view").show();
+
+      orig1 = document.querySelector("#inputcode1").value;
+      orig2 = document.querySelector("#inputcode2").value;
+      value = orig1;
+      // alert("input1: " + orig1);
+      // alert("input2: " + orig2);
+      initUI();
+      let d = document.createElement("div");
+      d.style.cssText = "width: 50px; margin: 7px; height: 14px";
+      dv.editor().addLineWidget(5, d);
+    }
+
+    function getRecursiveChilds(childNodes) {
+      let retArr = [];
+
+      for (let i = 0; i < childNodes.length; i++) {
+        let currentChildNode = childNodes[i];
+
+        // console.log("child - ");
+        // console.log(currentChildNode);
+        // console.log(currentChildNode.childs.length);
+
+        let currentChildJson = { name: currentChildNode.tagName, children: [] };
+
+        if (currentChildNode.childs.length > 0) {
+          let subChildJson = getRecursiveChilds(currentChildNode.childs);
+
+          // console.log(`subChildJson -`);
+          // console.log(subChildJson);
+
+          for (let j = 0; j < subChildJson.length; j++) {
+            currentChildJson.children.push(subChildJson[j]);
+          }
+        }
+
+        retArr.push(currentChildJson);
+      }
+      return retArr;
+    }
+
+    function filterFileA(node) {
+      return node.level > filterFileALevel;
+    }
+
+    function filterFileB(node) {
+      return node.level > filterFileBLevel;
+    }
+
+    function filterAllNodes(node) {
+      return node.level >= 0;
+    }
+
+    function createTreeJson(inputJs) {
+      let formedJson = [];
+
+      for (let i = 0; i < inputJs.nodeList.length; i++) {
+        let currentNode = inputJs.nodeList[i];
+
+        // console.log(`i = ${i}`);
+
+        // console.log(currentNode);
+
+        let currentJson = { name: currentNode.tagName, children: [] };
+
+        if (currentNode.childs.length > 0) {
+          let childJson = getRecursiveChilds(currentNode.childs);
+
+          // console.log(`childJson`);
+          // console.log(childJson);
+
+          for (let j = 0; j < childJson.length; j++) {
+            currentJson.children.push(childJson[j]);
+          }
+        }
+
+        formedJson.push(currentJson);
+      }
+
+      // console.log(`Fin JSON`);
+      // console.log(formedJson);
+      return formedJson;
+    }
+
+    function getRecursiveCompare(l1, l2, max) {
+      let levelnANodes = l1;
+      let levelnBNodes = l2;
+
+      for (let i = 0; i < levelnANodes.length; i++) {
+        if (i < levelnBNodes.length) {
+          if (levelnANodes[i].name !== levelnBNodes[i].name) {
+            console.log(`highlight ${levelnANodes[i].tId}`);
+
+            console.log(stringSimilarity.compareTwoStrings(levelnANodes[i].name, levelnBNodes[i].name));
+
+            $("#" + levelnBNodes[i].tId + "_span").addClass("errorAdd");
+            $("#" + levelnBNodes[i].tId).addClass("errorAddHighLight");
+            recursiveAddToError(levelnBNodes[i].children);
+          } else {
+            getRecursiveCompare(levelnANodes[i].children, levelnBNodes[i].children, max);
+          }
+        } else {
+          console.log(`0BTree differs on ${i} highlight complete pending arrays`);
+
+          for (let j = i; j < levelnBNodes.length; j++) {
+            $("#" + levelnBNodes[j].tId + "_span").addClass("errorAdd");
+            $("#" + levelnBNodes[j].tId).addClass("errorAddHighLight");
+          }
+        }
+      }
+
+      if (levelnANodes.length < levelnBNodes.length) {
+        // present in A but not in B mark all B childs beyond A len as error
+
+        for (let k = levelnANodes.length; k < levelnBNodes.length; k++) {
+          $("#" + levelnBNodes[k].tId + "_span").addClass("errorAdd");
+          $("#" + levelnBNodes[k].tId).addClass("errorAddHighLight");
+          recursiveAddToError(levelnBNodes[k].children);
+        }
+      }
+    }
+
+    function recursiveAddToError(rNodes) {
+      for (let i = 0; i < rNodes.length; i++) {
+        $("#" + rNodes[i].tId + "_span").addClass("errorAdd");
+        $("#" + rNodes[i].tId).addClass("errorAddHighLight");
+
+        if (rNodes[i].children.length > 0) recursiveAddToError(rNodes[i].children);
+      }
+    }
+
+    function initVtree(masterDataJson, compareDataJson) {
+      $("#formControlRange").attr("min", 0);
+      $("#formControlRange").attr("max", masterDataJson.levelMax);
+      $("#formControlRange").val(masterDataJson.levelMax);
+      $("#rangePrimary").html(masterDataJson.levelMax);
+
+      $("#formControlRange1").attr("min", 0);
+      $("#formControlRange1").attr("max", compareDataJson.levelMax);
+      $("#formControlRange1").val(compareDataJson.levelMax);
+      $("#rangePrimary1").html(compareDataJson.levelMax);
+
+      let treeAData = createTreeJson(masterDataJson);
+      let treeBData = createTreeJson(compareDataJson);
+
+      zTreeObjA = $.fn.zTree.init($("#treeDemo"), setting, treeAData);
+
+      zTreeObjA.expandAll(true);
+
+      zTreeObjB = $.fn.zTree.init($("#treeDemo1"), setting, treeBData);
+
+      zTreeObjB.expandAll(true);
+
+      //   console.log(zTreeObjB.transformToArray(zTreeObjB.getNodes()));
+      //   console.log(zTreeObjA.transformToArray(zTreeObjA.getNodes()));
+
+      //   console.log(jsonpath.query(zTreeObjA.transformToArray(zTreeObjA.getNodes()), "$..[?(@.level == 2)].children..name"));
+
+      // match levels
+
+      matchLevelMax = 0;
+
+      let level1ANodes = zTreeObjA.getNodesByParam("level", "1", null);
+      let level1BNodes = zTreeObjB.getNodesByParam("level", "1", null);
+
+      for (let i = 0; i < level1ANodes.length; i++) {
+        if (i < level1BNodes.length) {
+          if (level1ANodes[i].name !== level1BNodes[i].name) {
+            console.log(`highlight ${level1ANodes[i].tId}`);
+
+            console.log(stringSimilarity.compareTwoStrings(level1ANodes[i].name, level1BNodes[i].name));
+
+            $("#" + level1BNodes[i].tId + "_span").addClass("errorAdd");
+            $("#" + level1BNodes[i].tId).addClass("errorAddHighLight");
+          }
+
+          getRecursiveCompare(level1ANodes[i].children, level1BNodes[i].children, matchLevelMax);
+        } else {
+          console.log(`1BTree differs on ${i} highlight complete pending arrays`);
+        }
+      }
+
+      if (level1ANodes.length < level1BNodes.length) {
+        // present in A but not in B mark all B childs beyond A len as error
+
+        for (let j = level1ANodes.length; j < level1BNodes.length; j++) {
+          $("#" + level1BNodes[j].tId + "_span").addClass("errorAdd");
+        }
+      }
+
+      $("#formControlRange").change(function () {
+        $("#rangePrimary").html(this.value);
+
+        let allNodes = zTreeObjA.getNodesByFilter(filterAllNodes);
+
+        zTreeObjA.showNodes(allNodes);
+
+        filterFileALevel = this.value;
+
+        let hideNodes = zTreeObjA.getNodesByFilter(filterFileA);
+
+        zTreeObjA.hideNodes(hideNodes);
+      });
+      $("#formControlRange1").change(function () {
+        $("#rangePrimary1").html(this.value);
+
+        let allNodes = zTreeObjB.getNodesByFilter(filterAllNodes);
+
+        zTreeObjB.showNodes(allNodes);
+
+        filterFileBLevel = this.value;
+
+        let hideNodes = zTreeObjB.getNodesByFilter(filterFileB);
+
+        zTreeObjB.hideNodes(hideNodes);
+      });
+    }
+
+    $(document).ready(function () {
+      $("#view").hide();
+      $("#perc").hide();
+      $(".treecompare").hide();
+      $(".doccompare").hide();
+      $(".loader").hide();
+	  
+	  
+    });
+  </script>
+</html>
