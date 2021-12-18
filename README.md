@@ -1,4 +1,4 @@
-# Html-tree-compare
+# Project Name: Group / Classify Documents Comparison Based on Structure 
 
 ## Project details
 ### Project Scope
