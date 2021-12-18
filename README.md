@@ -3,9 +3,9 @@
 ## Project details
 ### Project Scope
  - HTML/XML Documents comparision.
- -- Node and attribute comparision based on the node level configuration
- -- Node, attribute and text comparision
- -- Compare and merge documents
+ - Node and attribute comparision based on the node level configuration
+ - Node, attribute and text comparision
+ - Compare and merge documents
  
 ### S/W Requirements
 
